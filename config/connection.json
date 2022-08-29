@@ -1,0 +1,7 @@
+{
+    "host" : "localhost",
+    "user" : "younes" ,
+    "password" : "1234tipo" ,
+    "database" : "zoom_app",
+    "type" : "mysql"
+} 

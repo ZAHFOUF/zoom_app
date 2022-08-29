@@ -1,0 +1,128 @@
+
+<style>
+    body{display: grid; place-items: center;}
+    form.n1{width: 50%;
+    margin: auto;}
+    form.n1 input{background-color: #424756 !important; color: #fff !important;}
+    form.n1 label{color: #FFFFFF !important;}
+    form.n1 button{font-size: 16px !important;border-radius: 40px !important;}
+    form.n1  h1{color: #FFFFFF !important;
+    text-align: center !important;
+    padding: 25px !important;}
+    form.n1 a{color: #0d6efd !important; cursor: pointer !important;}
+</style>
+<form class="n1" action="/room" method="get">
+    <!-- Email input -->
+    <h1>Join any room right now 🔥</h1>
+    <div class="form-outline mb-4">
+      <input type="text" name="id" id="form1Example1" class="form-control" />
+      <label class="form-label" for="form1Example1">Room id</label>
+    </div>
+  
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary btn-block">join room</button>
+
+      
+    <div class="col mt-3">
+        <!-- Simple link -->
+        <a  data-mdb-toggle="modal" data-mdb-target="#exampleModal"> <i class="fa-solid fa-plus" style="margin-left: -7px;"></i> Create Room</a>
+      </div>
+  
+ 
+  </form>
+
+
+   <!-- Modal -->
+   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Room</h5>
+          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <form action="/" method="post">
+            <div class="form-outline mb-4">
+                <input type="text" name="roomname" id="form1Example11" class="form-control" />
+                <label class="form-label" for="form1Example11">Room name</label>
+              </div>
+
+              <div class="form-outline mb-4">
+                <input type="number" name="number" id="form1Example12" class="form-control" />
+                <label class="form-label" for="form1Example12">user number</label>
+              </div>
+
+              <div class="form-check form-switch">
+                <input class="form-check-input" name="haveapassword" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                <label class="form-check-label" for="flexSwitchCheckDefault">Password</label>
+              </div>
+              
+              <div class="form-outline mb-4 pass" style="display:none;">
+                <input type="password" name="password" id="form1Example13" class="form-control" style="margin-top: 15px;" />
+                <label class="form-label" for="form1Example13">passoword</label>
+              </div>
+         
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <% if(create == "on") { %>
+    <script>
+        Swal.fire(
+  'You Created A room!',
+  'invite your frinds by share the id',
+  'success'
+)
+        document.querySelector("#form1Example1").value="<%=id%>"
+    </script>
+
+    <%}%>
+
+    <% if(create == "pass") { %>
+      <script>
+         Swal.fire({
+          icon: 'info',
+  title: 'password',
+  html:` <form action="/room" method="post">
+    <div class="form-outline mb-4" style="display:none;">
+      <input type="text" name="action" style="display:none;" value="scan" id="form1Example23" class="form-control" />
+
+            <input type="password" name="id" value="<%=id%>" id="form1Example20" class="form-control" />
+            <label class="form-label" for="form1Example20">id</label>
+          </div>
+        <div class="form-outline mb-4">
+            <input type="password" name="password" id="form1Example22" class="form-control" />
+            <label class="form-label" for="form1Example22">passoword</label>
+          </div>
+          <button type="sumbit" class="btn btn-primary">Send</button>
+        </form>`,
+  showCloseButton: true,
+  focusConfirm: false,
+  showConfirmButton: false,
+})
+      </script>
+
+      <%}%>
+
+    
+  <script>
+
+    var ch=document.querySelector("#flexSwitchCheckDefault")
+   $(document).ready(function(){
+        
+    $("#flexSwitchCheckDefault").click((e)=>{
+          ch.checked==true?$("div.pass").show(1000):$("div.pass").hide(1000)
+    })
+
+});  
+  </script>

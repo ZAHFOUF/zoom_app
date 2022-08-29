@@ -1,0 +1,339 @@
+<audio id="s">
+  <source src="../public/audio/44_notification-0dadaec8-9404-374f-896c-4c238819b800.mp3">
+</audio>
+<audio id="s2">
+  <source src="../public/audio/30_Bright-555c7fcb-2a4b-40e1-b74b-522256f256e0.mp3">
+</audio>
+<header class="p-3 mb-3 border-bottom">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+           <img src="../public/img/5e8ce318664eae0004085461.png" alt="" style="width: 43px;">
+      </a>
+
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="#" style="border-left: 1px solid white; margin-left: 13px;" class="nav-link px-2 waite">(Room 01) - <%=name%></a> </li>
+      </ul>
+
+      <div class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+        <span class="like"><i class="fa-solid fa-thumbs-up"></i></span>
+        <button type="button" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket" style="margin-right:3px;"></i>leave</button>
+      </div>
+    </div>
+</header>
+
+<div class="container-fluid" style="height:80%;">
+  <div class="on">
+    <i class="fa-solid fa-thumbs-up"></i>
+  </div>
+<div class="row" style="height:100% ;">
+  <!--Vedio Call-->
+  
+  <div class="col-md-8">
+      <div class="row">
+        <%for(var i=1;i<=number;i++) {%>
+            <div class="sq col-md-2 n<%=i%>">
+              <div>
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </div>
+          <%}%>
+      </div>
+
+      <div class="row">
+         <div class="main">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+         </div>
+      </div>
+  </div>
+
+
+
+  <!--Room chat-->
+  <div class="col-md-4 frame">
+    <div class="switch">
+      <div>
+        <button type="button" class="btn btn-primary btn-rounded">Room</button>
+        <button type="button" class="btn btn-dark btn-rounded">Global chat</button>
+      </div>
+    </div>
+
+    <div class="msg_frame">
+
+
+      <div class="loader" style="display: none;">Loading...</div>
+    </div>
+
+
+    <form id="form_msg">
+
+    <div class="form-outline" style="position: relative !important; padding: 6px !important;">
+        <button class="send" type="submit">
+          <div class="svg-wrapper-1">
+            <div class="svg-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path fill="none" d="M0 0h24v24H0z"></path>
+                <path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
+              </svg>
+            </div>
+          </div>
+        </button>
+        <input type="text" id="form12" class="form-control msginput" placeholder="Write a message ..."/>
+      </form>
+   
+    </div>
+  </div>
+</div>
+<div class="form-outline" style="width: 26%;
+margin-top: 65px;
+background-color: #FFF;
+border-radius: 6px; position: relative;">
+  <input type="text" id="form122" class="form-control"/>
+  <i class="fa-solid fa-copy copy" style="position: absolute;
+  top: 6px;
+  color: #009b8c;
+  font-size: 23px;
+  cursor: pointer;
+  right: 10px;"></i>
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+<script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+<script>
+  var socket = io();
+  var s2=document.querySelector("#s2")
+  var n=1
+
+  const myPeer = new Peer(undefined, {
+  host: '/',
+  port: '443'
+})
+
+var st
+var global_id
+var room_id="<%=id%>"
+//var id='null'
+
+
+myPeer.on("open",(id)=>{
+     global_id=id
+ })
+
+
+/* add stream */
+navigator.mediaDevices.getUserMedia({video:true,audio:false}).then((stream)=>{
+
+socket.emit("join-room",global_id,room_id)
+
+
+  socket.on("join-room",(global_id1,id1)=>{
+
+    if(global_id1!=myPeer.id && id1==room_id){
+    
+    var call=myPeer.call(global_id1,stream)
+              console.log(call);
+              call.on("stream",(userStream)=>{
+         addtointerface(userStream)
+         Swal.fire({
+  position: 'bottom-end',
+  icon: 'success',
+  title: 'one User added',
+  showConfirmButton: false,
+  timer: 1000
+})
+s2.autoplay=true
+s2.load();
+      })
+    }
+    })
+
+
+  st=stream
+   addtointerface(stream)
+   addtobody(stream)
+   const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
+
+Toast.fire({
+  icon: 'success',
+  title: 'You Joined <%=name%> Room'
+})
+
+
+  myPeer.on("call",(call)=>{
+      call.answer(stream)
+      call.on("stream",(userStream)=>{
+         addtointerface(userStream)
+      })
+  })
+  
+   
+      })
+
+    
+
+
+ 
+ 
+
+
+
+
+
+var form =document.querySelector("body > div > div > div > div.col-md-4.frame > form")
+var inbox=document.querySelector("body > div > div > div > div.col-md-4.frame > div.msg_frame")
+var input=document.querySelector("#form12")
+var s=document.querySelector("audio#s")
+var leave=document.querySelector("body > div > header > div > div > button")
+var typing=document.querySelector("body > div > div > div > div.col-md-4.frame > div.msg_frame > div")
+var like=document.querySelector("body > div > header > div > div > span")
+var show_like=document.querySelector("body > div > div > div.on")
+var clip=document.querySelector("#form122")
+var copyText=document.querySelector("i.copy")
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    socket.emit("typing","false",room_id)
+    if (input.value) {
+      socket.emit('chat message', input.value,room_id);
+      input.value = '';
+    }
+  });
+
+  socket.on('chat message', function(msg,global1_id) {
+        if (global1_id==room_id) {
+          s.autoplay = true;
+          s.load();
+           appendmsg(msg)
+        }
+  });
+
+
+  /* Event static */
+
+    leave.onclick=function(){
+      Swal.fire({
+  title: 'Do you wanna leave this room?',
+  showDenyButton: false,
+  showCancelButton: true,
+  confirmButtonText: 'Yes',
+  denyButtonText: `Don't save`,
+}).then((result) => {
+  /* Read more about isConfirmed, isDenied below */
+  if (result.isConfirmed) {
+     window.location.href="http://localhost:3000/"
+  } else if (result.isDenied) {
+    Swal.fire('Changes are not saved', '', 'info')
+  }
+})
+    }
+
+input.addEventListener("input",()=>{
+  if (input.value != '') {
+    socket.emit("typing","true",room_id)
+  }else{
+    socket.emit("typing","false",room_id)
+  }
+})
+
+input.addEventListener("blur",()=>{
+   socket.emit("typing","false",room_id)
+})
+
+socket.on("typing",(open,room_id1)=>{
+  console.log("Yes");
+   if (open=="true" && room_id==room_id1) {
+       typing.style.display="block"
+   }else if(open == "false" && room_id==room_id1){
+    typing.style.display="none"
+   }   
+})
+
+like.addEventListener("click",()=>{
+    socket.emit("like",room_id)
+})
+
+socket.on("like",(room_id1)=>{
+      if (room_id1==room_id) {
+          show_like.style.display="grid"
+          setTimeout(()=>{
+            show_like.style.display="none"
+          },3000)
+      } 
+})
+clip.value=room_id.slice(0,8) + "..."
+copyText.onclick=function(){
+  /* Select the text field */
+ clip.select();
+  clip.setSelectionRange(0, 99999); /* For mobile devices */
+
+   /* Copy the text inside the text field */
+  navigator.clipboard.writeText(room_id);
+}
+
+
+/* My function */
+
+  function addtointerface (stream) {
+    var video=document.createElement("video")
+    video.srcObject=stream
+    var e= document.querySelector(`div.n${n}`)
+    video.autoplay=true
+    video.classList.add("v")
+    e.innerHTML=''
+    e.classList.add("full")
+    e.appendChild(video)
+    n+=1
+}
+
+function addtobody (stream){
+  var video=document.createElement("video")
+    video.srcObject=stream
+    var e= document.querySelector(`div.main`)
+    video.autoplay=true
+    video.classList.add("v2")
+    e.innerHTML=''
+    e.classList.add("full")
+    e.appendChild(video)
+
+
+}
+
+function appendmsg(msg) {
+  var span=document.createElement("div")
+  span.innerText=msg
+  span.classList.add("msg")
+  inbox.appendChild(span)
+}
+
+function copyid (){
+
+}
+
+</script>
+   

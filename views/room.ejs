@@ -116,24 +116,28 @@ border-radius: 6px; position: relative;">
 <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
 <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
 <script>
+  console.log("<%=number%>");
   var socket = io();
   var s2=document.querySelector("#s2")
   var n=1
 
   const myPeer = new Peer(undefined, {
   host: '/',
-  port: '443'
+  port: '9000',
 })
 
 var st
 var global_id
 var room_id="<%=id%>"
-//var id='null'
+
+
 
 
 myPeer.on("open",(id)=>{
+     console.log(id);
      global_id=id
  })
+
 
 
 /* add stream */
@@ -204,7 +208,7 @@ Toast.fire({
 
 
 
-
+var form =document.querySelector("body > div > div > div > div.col-md-4.frame > form")
 var form =document.querySelector("body > div > div > div > div.col-md-4.frame > form")
 var inbox=document.querySelector("body > div > div > div > div.col-md-4.frame > div.msg_frame")
 var input=document.querySelector("#form12")

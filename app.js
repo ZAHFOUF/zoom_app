@@ -6,7 +6,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 
 //Bodyparser
@@ -36,10 +36,17 @@ app.use(express.static('public'))
 app.use("/room",require("./routes/room"))
 app.use("/",require("./routes/index"))
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
+// Proxy the PeerJS requests to the actual PeerJS server
+app.use('/peerjs', createProxyMiddleware({ target: 'http://localhost:443', changeOrigin: true }));
 
 io.on('connection', (socket) => {
-    //console.log('new user');
+    console.log('new user');
     socket.on('chat message', (msg,global_id) => {
         io.emit('chat message', msg,global_id);
       });

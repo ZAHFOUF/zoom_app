@@ -7,7 +7,6 @@ R.get("/",(req,res)=>{
     mysql.query(sql,(err,result)=>{
         console.log(req.query.id);
         if (result[0].password !="null") {
-            console.log("Yes");
             res.redirect(`/?action=pass&id=${req.query.id}`)
         }else if(result[0].password == "null"){
             res.render("room",{name:result[0].name,number:result[0].number,id:req.query.id})
@@ -19,6 +18,13 @@ R.get("/",(req,res)=>{
     
 
 })
+
+
+
+
+
+
+
 
 R.post("/",(req,res)=>{
     console.log(req.body);
